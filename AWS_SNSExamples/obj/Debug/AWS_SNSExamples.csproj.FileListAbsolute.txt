@@ -1,0 +1,15 @@
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\AWS_SNSExamples.dll.config
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\AWS_SNSExamples.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\AWS_SNSExamples.pdb
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\AWSSDK.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\Newtonsoft.Json.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Net.Http.Formatting.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Web.Http.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Web.Http.WebHost.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\AWSSDK.pdb
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\Newtonsoft.Json.xml
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Net.Http.Formatting.xml
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Web.Http.xml
+D:\AWS_SNS_Examples\AWS_SNSExamples\bin\System.Web.Http.WebHost.xml
+D:\AWS_SNS_Examples\AWS_SNSExamples\obj\Debug\AWS_SNSExamples.dll
+D:\AWS_SNS_Examples\AWS_SNSExamples\obj\Debug\AWS_SNSExamples.pdb
