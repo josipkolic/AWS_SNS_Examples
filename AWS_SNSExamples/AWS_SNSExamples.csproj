@@ -83,6 +83,7 @@
     <Compile Include="AWS_SNS\SampleMessageGenerator.cs" />
     <Compile Include="AWS_SNS\SNSClientWrapper.cs" />
     <Compile Include="AWS_SNS\SNSMobilePush.cs" />
+    <Compile Include="Enums\PlatformType.cs" />
     <Compile Include="Enums\PushNotificationType.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

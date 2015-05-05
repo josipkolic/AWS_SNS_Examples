@@ -30,7 +30,7 @@ namespace AWS_SNSExamples.AWS_SNS
             appMessageMap.Add("badge", 1);
             appMessageMap.Add("sound", "beep");
             appleMessageMap.Add("aps", appMessageMap);
-            appleMessageMap.Add("actionId", notificationObj.ActionId);
+           // appleMessageMap.Add("actionId", notificationObj.ActionId);
             appleMessageMap.Add("tag", Enum.GetName(typeof(PushNotificationType), notificationObj.NotificationType).ToString());
             appleMessageMap.Add("device_token",notificationObj.ToDeviceId);
             return jsonify(appleMessageMap);
@@ -42,16 +42,12 @@ namespace AWS_SNSExamples.AWS_SNS
             androidMessageMap.Add("collapse_key", "Welcome");
             extraParameters.Add("message", notificationObj.Text);
             extraParameters.Add("apid", notificationObj.ToDeviceId);
-            extraParameters.Add("actionId", notificationObj.ActionId);
+           // extraParameters.Add("actionId", notificationObj.ActionId);
             extraParameters.Add("tag", Enum.GetName(typeof(PushNotificationType), notificationObj.NotificationType).ToString());
             androidMessageMap.Add("data", extraParameters);
             androidMessageMap.Add("delay_while_idle", true);
             androidMessageMap.Add("time_to_live", 125);
             androidMessageMap.Add("dry_run", false);
-           // androidMessageMap.Add("apid", notificationObj.ToDeviceId);
-           // androidMessageMap.Add("actionId", notificationObj.ActionId);
-           // androidMessageMap.Add("tag", Enum.GetName(typeof(PushNotificationType), notificationObj.NotificationType).ToString());
-            //androidMessageMap.Add("extra", extraParameters);
             return jsonify(androidMessageMap);
         }
         private static Dictionary<string, string> getData(string message)

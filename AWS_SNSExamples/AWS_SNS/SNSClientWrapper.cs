@@ -8,6 +8,7 @@ using Amazon.SimpleNotificationService.Model;
 using Amazon.CognitoSync;
 using System.Net;
 using Amazon.Runtime;
+using AWS_SNSExamples.Enums;
 
 namespace AWS_SNSExamples.AWS_SNS
 {
@@ -19,18 +20,32 @@ namespace AWS_SNSExamples.AWS_SNS
             this.snsClient = client;
         }
 
-        //private CreatePlatformApplicationResult CreatePlatformApplication(string applicationName, Platform platform, string principal,String credential)
+        // <summary>
+        // 
+        // </summary>
+        // <param name="applicationName"></param>
+        // <param name="platform"></param>
+        // <param name="principal"></param>
+        // <param name="credential"></param>
+        // <returns></returns>
+        //private CreatePlatformApplicationResult CreatePlatformApplication(string applicationName, Platform platform, string principal, String credential)
         //{
         //    CreatePlatformApplicationRequest platformApplicationRequest = new CreatePlatformApplicationRequest();
         //}
-        public CreatePlatformEndpointResult CreatePlatformEndpoint(Platform platform,string platformToken, string applicationArn)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="platform"></param>
+        /// <param name="platformToken"></param>
+        /// <param name="applicationArn"></param>
+        /// <returns></returns>
+        public CreatePlatformEndpointResult CreatePlatformEndpoint(string platformToken, string applicationArn)
         {
-            //CreatePlatformEndpointResult cper = new CreatePlatformEndpointResult();
             try
             {
                 CreatePlatformEndpointRequest platformEndpointRequest = new CreatePlatformEndpointRequest();
                 //platformEndpointRequest.CustomUserData = "";
-
                 platformEndpointRequest.Token = platformToken;
                 platformEndpointRequest.PlatformApplicationArn = applicationArn;
                 return snsClient.CreatePlatformEndpoint(platformEndpointRequest);
@@ -40,25 +55,27 @@ namespace AWS_SNSExamples.AWS_SNS
                 CreatePlatformEndpointResult cper = new CreatePlatformEndpointResult();
                 cper.HttpStatusCode = HttpStatusCode.BadRequest;
                 return cper;
-            }
-            //return cper;   
+            } 
         }
 
-
-        public PublishResult Publish(string endpointArn, Platform platform, Dictionary<string, Dictionary<string, MessageAttributeValue>> attributesMap,string messageSend)
+        // <summary>
+        // 
+        // </summary>
+        // <param name="endpointArn"></param>
+        // <param name="platform"></param>
+        // <param name="attributesMap"></param>
+        // <param name="messageSend"></param>
+        // <returns></returns>
+        public PublishResult Publish(string endpointArn, string platform,string messageSend)
         {
             PublishRequest publishRequest = new PublishRequest();
-		Dictionary<string, MessageAttributeValue> notificationAttributes = getValidNotificationAttributes(attributesMap[platform]);
-		if (notificationAttributes != null && notificationAttributes.Count()!=0) {
-			
-            publishRequest.MessageAttributes = notificationAttributes;
-		}
+
 		publishRequest.MessageStructure="json";
 		// If the message attributes are not set in the requisite method,
 		// notification is sent with default attributes
-        //String message = getPlatformSampleMessage(platform,messageSend);
+
 		Dictionary<string, string> messageMap = new Dictionary<string, string>();
-		messageMap.Add(platform.Value.ToString(), messageSend);
+		messageMap.Add(platform, messageSend);
 		messageSend = SampleMessageGenerator.jsonify(messageMap);
 
 		// For direct publish to mobile end points, topicArn is not relevant.
@@ -68,82 +85,23 @@ namespace AWS_SNSExamples.AWS_SNS
 		return snsClient.Publish(publishRequest);
         }
 
-        public AmazonWebServiceResponse Notification(Platform platform, string platformToken, Dictionary<string, Dictionary<string, MessageAttributeValue>> attrsMap, string mssg, string platformApplicationArn)
+        public AmazonWebServiceResponse Notification(string platform, string platformToken, string mssg, string platformApplicationArn)
         {
-
-		// The Platform Application Arn can be used to uniquely identify the
-		// Platform Application.
-		//String platformApplicationArn = "arn:aws:sns:us-east-1:776400555584:app/APNS_SANDBOX/uAround";
 
 		// Create an Endpoint. This corresponds to an app on a device.
 		CreatePlatformEndpointResult platformEndpointResult = CreatePlatformEndpoint(
-				platform,
 				platformToken, platformApplicationArn);
         //System.out.println(platformEndpointResult);
         if (platformEndpointResult.HttpStatusCode.Equals(HttpStatusCode.OK))
         {
             // Publish a push notification to an Endpoint.
             PublishResult publishResult = Publish(
-                    platformEndpointResult.EndpointArn, platform, attrsMap, mssg);
+                    platformEndpointResult.EndpointArn,platform, mssg);
             return publishResult;
         }
         return platformEndpointResult;
 	}
-        public Dictionary<string, MessageAttributeValue> getValidNotificationAttributes(Dictionary<string, MessageAttributeValue> notificationAttributes) 
-        {
-		    Dictionary<string, MessageAttributeValue> validAttributes = new Dictionary<string, MessageAttributeValue>();
-
-		    if (notificationAttributes == null) return validAttributes;
-
-                foreach(var item in notificationAttributes)
-                {
-                    if(!String.IsNullOrEmpty(item.Value.StringValue))
-                    {
-                        validAttributes.Add(item.Key,item.Value);
-                    }
-                }
-		    return validAttributes;
-	    }
         
-        
-        //public void demoNotification(Platform platform,string platformToken,
-        //    Dictionary<string, Dictionary<string, MessageAttributeValue>> attrsMap) 
-        //{
-        //String platformApplicationArn = "arn:aws:sns:us-east-1:776400555584:app/APNS_SANDBOX/uAround";
-        //// Create an Endpoint. This corresponds to an app on a device.
-        //CreatePlatformEndpointResult platformEndpointResult = CreatePlatformEndpoint(
-        //        platform,
-        //        "CustomData - Useful to store endpoint specific data",
-        //        platformToken, platformApplicationArn);
-        //Console.WriteLine(platformEndpointResult);
-        //   // System.out.println(platformEndpointResult);
-
-        //// Publish a push notification to an Endpoint.
-        //PublishResult publishResult = Publish(
-        //        platformEndpointResult.EndpointArn, platform, attrsMap,getPlatformSampleMessage(platform,"Test"));
-        //Console.WriteLine("Published! \n{MessageId="
-        //        + publishResult.MessageId + "}");
-        //// Delete the Platform Application since we will no longer be using it.
-        ////deletePlatformApplication(platformApplicationArn);
-	//}
-        //public string getPlatformSampleMessage(Platform platform, string message)
-        //{
-        //    switch (platform)
-        //    {
-        //        case "APNS":
-        //            return SampleMessageGenerator.getSampleAppleMessage(message);
-        //        case "APNS_SANDBOX":
-        //            return SampleMessageGenerator.getSampleAppleMessage(message);
-        //        case "GCM":
-        //            return SampleMessageGenerator.getSampleAndroidMessage(message);
-        //        default:
-        //            throw new PlatformNotSupportedException("Platform not supported : "
-        //                    + platform.Value);
-        //    }
-        //}
-
-
-
     }
     
 }

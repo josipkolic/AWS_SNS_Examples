@@ -8,6 +8,7 @@ using Amazon.SimpleNotificationService.Model;
 using Amazon.CognitoSync;
 using AWS_SNSExamples.Models;
 using System.Configuration;
+using AWS_SNSExamples.Enums;
 
 namespace AWS_SNSExamples.AWS_SNS
 {
@@ -31,22 +32,21 @@ namespace AWS_SNSExamples.AWS_SNS
         
 	 public void SendPushNotification(PushNotificationDto notification)
         {
-            Guid APID;
-            bool isApid = Guid.TryParse(notification.ToDeviceId, out APID);
-            if (isApid)
+
+            if (notification.ToDeviceId.Length==64)
             {
-                //is Android
-               string text = SampleMessageGenerator.getSampleAndroidMessage(notification);
+                //is Ios
+                string iOSMessage = SampleMessageGenerator.getSampleAppleMessage(notification);
                 Dictionary<string, Dictionary<string, MessageAttributeValue>> test = attributesMap();
-                snsClientWrapper.Notification(Platform.GCM, notification.ToDeviceId, test, text, ConfigurationManager.AppSettings["AndroidPlatformApplicationArn"]);
+                snsClientWrapper.Notification(PlatformType.iOSPlatform, notification.ToDeviceId, iOSMessage, ConfigurationManager.AppSettings["ApplePlatformApplicationArn"]);
             }
             else
             {
-                //is Ios
-                string text = SampleMessageGenerator.getSampleAppleMessage(notification);
-
+                //is Android
+                string androidMessage = SampleMessageGenerator.getSampleAndroidMessage(notification);
                 Dictionary<string, Dictionary<string, MessageAttributeValue>> test = attributesMap();
-                snsClientWrapper.Notification(Platform.APNS, notification.ToDeviceId, test, text, ConfigurationManager.AppSettings["ApplePlatformApplicationArn"]);
+                snsClientWrapper.Notification(PlatformType.AndroidPlatform, notification.ToDeviceId, androidMessage, ConfigurationManager.AppSettings["AndroidPlatformApplicationArn"]);
+               
             }
         }
 
